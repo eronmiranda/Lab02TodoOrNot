@@ -99,7 +99,7 @@ public class TodoListDB extends SQLiteOpenHelper {
         String queryStatement = "SELECT " + BaseColumns._ID + ", "
                 + TABLE_LIST_TITLE_COLUMN_NAME
                 + " FROM " + TABLE_LIST_TITLE
-                + " WHERE " + TABLE_LIST_ITEM_COLUMN_TITLE_ID + "= ?";
+                + " WHERE " + BaseColumns._ID + "= ?";
         String[] selectionArgs = {String.valueOf(id)};
 
         Cursor singleResultCursor = db.rawQuery(queryStatement, selectionArgs);
@@ -131,7 +131,7 @@ public class TodoListDB extends SQLiteOpenHelper {
         values.put(TABLE_LIST_ITEM_COLUMN_DATE, formattedDate);
         values.put(TABLE_LIST_ITEM_COLUMN_COMPLETE, "Incomplete");
         values.put(TABLE_LIST_ITEM_COLUMN_TITLE_ID,titleId);
-        // insert more from here
+
         return db.insert(TABLE_LIST_ITEM, null, values);
     }
 

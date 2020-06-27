@@ -6,6 +6,7 @@ import androidx.fragment.app.DialogFragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +18,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
     private EditText mListTitleEditText;
     private Button mAddTitleButton;
     private Spinner mListTitleSpinner;
@@ -33,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private long mEditId = 0;
     private long mSelectedListTitleId;
     private boolean mEditMode = false;
-    private String isComplete;
+
+    private static final String BASE_URL= "http://www.youcode.ca/";
+
 
     private TodoListDB mTodoDatabase;
 
@@ -53,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         mDeleteItemButton = findViewById(R.id.activity_main_delete_item_button);
         mArchiveItemButton =  findViewById(R.id.activity_main_archive_button);
         mCompleteItemButton = findViewById(R.id.activity_main_complete_button);
+
+        mTodoDatabase = new TodoListDB(this);
 
 
         mUpdateItemButton.setVisibility(View.GONE);
@@ -97,13 +109,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    cancelEditMode(view);
+                    cancelEditMode();
                 }
 
             }
         });
 
-        mTodoDatabase = new TodoListDB(this);
+
 
         bindDataToListTitleSpinner();
         rebindListItemView();
@@ -122,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        mListTitleEditText.setText("");
     }
 
     private void bindDataToListTitleSpinner() {
@@ -205,11 +216,11 @@ public class MainActivity extends AppCompatActivity {
             mDateEditText.setText("");
 
             rebindListItemView();
-            cancelEditMode(view);
+            cancelEditMode();
         }
 
     }
-    public void cancelEditMode(View view){
+    public void cancelEditMode(){
         mEditMode = false;
         mAddItemButton.setVisibility(View.VISIBLE);
         mUpdateItemButton.setVisibility(View.GONE);
@@ -222,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
         mDateEditText.setText("");
     }
     public void onCompleteListItem(View view){
-        isComplete = String.valueOf(R.string.completed_text);
         String itemName = mListItemEditText.getText().toString();
         String date = mDateEditText.getText().toString();
 
@@ -254,11 +264,16 @@ public class MainActivity extends AppCompatActivity {
             mDateEditText.setText("");
 
             rebindListItemView();
-            cancelEditMode(view);
+            cancelEditMode();
         }
     }
+
     public void onDeleteListItem(View view){
-        long rowsDeleted = mTodoDatabase.deleteListItem(mEditId);
+        deleteItem(mEditId);
+    }
+
+    public void deleteItem(long editId){
+        long rowsDeleted = mTodoDatabase.deleteListItem(editId);
         if(rowsDeleted==1){
             Toast.makeText(this, getResources().getString(R.string.delete_record), Toast.LENGTH_SHORT ).show();
         }
@@ -266,7 +281,51 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Delete was not successful", Toast.LENGTH_SHORT ).show();
         }
         rebindListItemView();
-        cancelEditMode(view);
+        cancelEditMode();
+    }
+
+    public void onArchiveListItem(View view){
+      ListItem singleResult = mTodoDatabase.findListItem(mEditId);
+      long titleId = Long.parseLong(singleResult.getTitleId());
+      ListTitle titleResult = mTodoDatabase.findListTitle(titleId);
+      String listTitle = titleResult.getTitleName();
+      String listItem = singleResult.getListItemName();
+      String completed_flag = singleResult.getIsComplete().equals("Completed") ? "1" : "0";;
+      String username = "eron";
+      String password = "miranda";
+      String date = singleResult.getDate();
+
+        try {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .build();
+            YoucodeTodoListService service = retrofit.create(YoucodeTodoListService.class);
+            Call<String> postCall = service.archiveListItem(listTitle, listItem, completed_flag, username, password,date);
+            postCall.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Log.i(TAG, "Post was successful");
+
+                    if (response.isSuccessful()) {
+                        deleteItem(mEditId);
+                        Toast.makeText(MainActivity.this, "Post was successful", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Invalid URL. Cannot access the given URL.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e(TAG, "Error calling web service");
+                    Toast.makeText(MainActivity.this, "Error  calling web service", Toast.LENGTH_SHORT).show();
+                    t.printStackTrace();
+                }
+            });
+        }
+        catch (Exception e){
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
