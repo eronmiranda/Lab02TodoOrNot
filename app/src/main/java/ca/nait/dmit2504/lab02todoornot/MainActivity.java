@@ -27,11 +27,13 @@ public class MainActivity extends AppCompatActivity {
     private Button mUpdateItemButton;
     private Button mDeleteItemButton;
     private Button mArchiveItemButton;
+    private Button mCompleteItemButton;
     private ListView mListItemListView;
 
     private long mEditId = 0;
     private long mSelectedListTitleId;
     private boolean mEditMode = false;
+    private String isComplete;
 
     private TodoListDB mTodoDatabase;
 
@@ -50,9 +52,13 @@ public class MainActivity extends AppCompatActivity {
         mUpdateItemButton = findViewById(R.id.activity_main_update_item_Button);
         mDeleteItemButton = findViewById(R.id.activity_main_delete_item_button);
         mArchiveItemButton =  findViewById(R.id.activity_main_archive_button);
+        mCompleteItemButton = findViewById(R.id.activity_main_complete_button);
+
+
         mUpdateItemButton.setVisibility(View.GONE);
         mDeleteItemButton.setVisibility(View.GONE);
         mArchiveItemButton.setVisibility(View.GONE);
+        mCompleteItemButton.setVisibility(View.GONE);
 
         mAddTitleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,10 +81,16 @@ public class MainActivity extends AppCompatActivity {
                     mUpdateItemButton.setVisibility(View.VISIBLE);
                     mDeleteItemButton.setVisibility(View.VISIBLE);
                     mArchiveItemButton.setVisibility(View.VISIBLE);
+                    mCompleteItemButton.setVisibility(View.VISIBLE);
 
                     mListItemEditText.setText(singleResult.getListItemName());
                     mDateEditText.setText(singleResult.getDate());
-                    // add more
+                    if(singleResult.getIsComplete().equals("Completed")){
+                        mCompleteItemButton.setText(R.string.not_completed_text);
+                    }
+                    else{
+                        mCompleteItemButton.setText(R.string.complete_button_text);
+                    }
                 }
                 else{
                     cancelEditMode(view);
@@ -181,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_LONG).show();
         } else {
             // save the record to the database
-            long rowsUpdated = mTodoDatabase.updateListItem(mEditId, itemName, date, "0");
+            long rowsUpdated = mTodoDatabase.updateListItem(mEditId, itemName, date);
             if (rowsUpdated == 1) {
                 Toast.makeText(this, getResources().getString(R.string.update_record, mEditId), Toast.LENGTH_SHORT ).show();
             } else {
@@ -202,9 +214,46 @@ public class MainActivity extends AppCompatActivity {
         mUpdateItemButton.setVisibility(View.GONE);
         mDeleteItemButton.setVisibility(View.GONE);
         mArchiveItemButton.setVisibility(View.GONE);
+        mCompleteItemButton.setVisibility(View.GONE);
 
         mListItemEditText.setText("");
         mDateEditText.setText("");
+    }
+    public void onCompleteListItem(View view){
+        isComplete = String.valueOf(R.string.completed_text);
+        String itemName = mListItemEditText.getText().toString();
+        String date = mDateEditText.getText().toString();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if(itemName.isEmpty()){
+            stringBuilder.append("Item name value is required\n");
+        }
+        if (date.isEmpty()) {
+            stringBuilder.append("Date value is required. \n");
+        }
+        if (stringBuilder.length() > 0) {
+            Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_LONG).show();
+        } else {
+            String isComplete;
+            if(mCompleteItemButton.getText().toString().equals("Complete")){
+                isComplete = "Completed";
+            }
+            else{
+                isComplete = "Not Complete";
+            }
+            long rowsUpdated = mTodoDatabase.completeListItem(mEditId, isComplete);
+            if (rowsUpdated == 1) {
+                Toast.makeText(this, getResources().getString(R.string.complete_list, mEditId), Toast.LENGTH_SHORT ).show();
+            } else {
+                Toast.makeText(this, "Completion was not successful", Toast.LENGTH_SHORT ).show();
+            }
+
+            mListItemEditText.setText("");
+            mDateEditText.setText("");
+
+            rebindListItemView();
+            cancelEditMode(view);
+        }
     }
 
 }

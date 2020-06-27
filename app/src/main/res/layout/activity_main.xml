@@ -85,8 +85,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
+            android:background="#33A32F"
             android:onClick="onAddListItem"
             android:text="@string/add_task_text"
+            android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
         <Button
@@ -94,8 +96,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="#3F51B5"
             android:onClick="onUpdateListItem"
             android:text="@string/update_task_text"
+            android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
         <Button
@@ -103,8 +107,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="#E91E63"
             android:onClick="onDeleteListItem"
             android:text="@string/delete_item_text"
+            android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
         <Button
@@ -112,9 +118,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="#CAB60B"
             android:onClick="onArchiveListItem"
             android:text="@string/archive_item_text"
+            android:textColor="#FFFFFF"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/activity_main_complete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#009688"
+            android:onClick="onCompleteListItem"
+            android:text="@string/complete_button_text"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
     <ListView

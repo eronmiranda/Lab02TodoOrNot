@@ -121,21 +121,29 @@ public class TodoListDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(TABLE_LIST_ITEM_COLUMN_NAME, name);
         values.put(TABLE_LIST_ITEM_COLUMN_DATE, date);
-        values.put(TABLE_LIST_ITEM_COLUMN_COMPLETE, 0);
+        values.put(TABLE_LIST_ITEM_COLUMN_COMPLETE, "Incomplete");
+        values.put(TABLE_LIST_ITEM_COLUMN_TITLE_ID,titleId);
         // insert more from here
         return db.insert(TABLE_LIST_ITEM, null, values);
     }
 
-    public int updateListItem(long id, String name, String date, String isComplete){
+    public int updateListItem(long id, String name, String date){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(BaseColumns._ID,id);
         values.put(TABLE_LIST_ITEM_COLUMN_NAME, name);
         values.put(TABLE_LIST_ITEM_COLUMN_DATE, date);
-        values.put(TABLE_LIST_ITEM_COLUMN_COMPLETE, isComplete);
 
         return db.update(TABLE_LIST_ITEM, values,
                 BaseColumns._ID + " = ?",
+                new String[]{String.valueOf(id)});
+    }
+    public int completeListItem(long id, String isComplete){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(BaseColumns._ID,id);
+        values.put(TABLE_LIST_ITEM_COLUMN_COMPLETE,isComplete);
+        return db.update(TABLE_LIST_ITEM, values, BaseColumns._ID + " = ?",
                 new String[]{String.valueOf(id)});
     }
 

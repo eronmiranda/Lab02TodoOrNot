@@ -16,6 +16,8 @@
     <string name="complete_text">isComplete</string>
     <string name="create_new_record">Successfully created record with id of %d</string>
     <string name="update_record">Successfully updated record with id of %d</string>
+    <string name="complete_list">Successfully completed this list item with id of %d</string>
     <string name="completed_text">Completed</string>
-    <string name="not_completed_text">Not Completed</string>
+    <string name="not_completed_text">Not Complete</string>
+    <string name="complete_button_text">Complete</string>
 </resources>
