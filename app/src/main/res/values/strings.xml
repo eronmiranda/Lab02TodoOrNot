@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lab02TodoOrNot</string>
+    <string name="app_name">Lab02: Todo Or Not</string>
     <string name="todo_or_not_list_text">Todo or Not list</string>
     <string name="create_list_title_text">Enter new list title category</string>
     <string name="add_title_text">Add</string>
@@ -22,4 +22,6 @@
     <string name="complete_button_text">Complete</string>
     <string name="delete_record">Successfully deleted the list item</string>
     <string name="task_todo_text">Enter tasks ToDo</string>
+    <string name="archive_title_list_text" >List Title</string>
+    <string name="view_archive">Archive view</string>
 </resources>

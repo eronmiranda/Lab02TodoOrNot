@@ -21,6 +21,7 @@ public class ViewArchiveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_archive);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ListView archiveListView = findViewById(R.id.view_archive_listview);
 
@@ -35,7 +36,7 @@ public class ViewArchiveActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String responseBody = response.body();
-                ListItemAdapter listItemAdapter = new ListItemAdapter(getApplicationContext());
+                ArchiveListItemAdapter archiveListItemAdapter = new ArchiveListItemAdapter(getApplicationContext());
                 String[] listItemArray = responseBody.split("\n");
 
                 for (int index = 0; index < listItemArray.length; index+=4) {
@@ -44,9 +45,9 @@ public class ViewArchiveActivity extends AppCompatActivity {
                     currentItem.setListTitle(listItemArray[index + 1]);
                     currentItem.setListItemName(listItemArray[index + 2]);
                     currentItem.setIsComplete(listItemArray[index + 3]);
-                    listItemAdapter.addItem(currentItem);
+                    archiveListItemAdapter.addItem(currentItem);
                 }
-                archiveListView.setAdapter(listItemAdapter);
+                archiveListView.setAdapter(archiveListItemAdapter);
             }
 
             @Override
