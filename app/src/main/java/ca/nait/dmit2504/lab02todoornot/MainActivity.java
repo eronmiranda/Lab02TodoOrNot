@@ -198,8 +198,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
         int fontSize = prefs.getInt("fontsize_pref",0)+12;
 //
-//        mListTitleEditText.setTextSize(fontSize);
-//        mTodoOrNotTextView.setTextSize(fontSize);
+          mListTitleEditText.setTextSize(fontSize);
+          mTodoOrNotTextView.setTextSize(fontSize);
 //        mItemTitleTextView.setText(fontSize);
 //        mAddTitleButton.setText(fontSize);
 //        mUpdateTitleButton.setText(fontSize);
@@ -434,6 +434,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         StringBuilder stringBuilder = new StringBuilder();
         if(titleName.isEmpty()){
             stringBuilder.append("List title name value is required\n");
+        }
+        if(mSelectedListTitleId == 0)
+        {
+            stringBuilder.append("Must select list title from the list");
         }
         if (stringBuilder.length() > 0) {
             Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_LONG).show();
