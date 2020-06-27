@@ -6,6 +6,15 @@ public class ListItem {
     private String mDate;
     private String mIsComplete;
     private String mTitleId;
+    private String ListTitle;
+
+    public String getListTitle() {
+        return ListTitle;
+    }
+
+    public void setListTitle(String listTitle) {
+        ListTitle = listTitle;
+    }
 
     public long getId() {
         return mId;

@@ -57,11 +57,11 @@ public class ListItemAdapter extends BaseAdapter{
         if(currentItem.getIsComplete().equals("0"))
         {
             isComplete.setText(R.string.completed_text);
-            isComplete.setTextColor(Color.RED);
+            isComplete.setTextColor(Color.GREEN);
         }
         else{
             isComplete.setText(R.string.not_completed_text);
-            isComplete.setTextColor(Color.GREEN);
+            isComplete.setTextColor(Color.RED);
         }
 
         return listItemView;
