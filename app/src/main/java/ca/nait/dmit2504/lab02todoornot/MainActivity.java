@@ -197,22 +197,22 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             mUrl = BASE_URL;
         }
         int fontSize = prefs.getInt("fontsize_pref",0)+12;
-
-        mListTitleEditText.setTextSize(fontSize);
-        mTodoOrNotTextView.setTextSize(fontSize);
-        mItemTitleTextView.setText(fontSize);
-        mAddTitleButton.setText(fontSize);
-        mUpdateTitleButton.setText(fontSize);
-        mListItemEditText.setText(fontSize);
-        mDateEditText.setText(fontSize);
-        mAddItemButton.setText(fontSize);
-        mUpdateItemButton.setText(fontSize);
-        mDeleteItemButton.setText(fontSize);
-        mArchiveItemButton.setText(fontSize);
-        mCompleteItemButton.setText(fontSize);
-        mListViewComplete.setText(fontSize);
-        mListViewDate.setText(fontSize);
-        mListViewItemName.setText(fontSize);
+//
+//        mListTitleEditText.setTextSize(fontSize);
+//        mTodoOrNotTextView.setTextSize(fontSize);
+//        mItemTitleTextView.setText(fontSize);
+//        mAddTitleButton.setText(fontSize);
+//        mUpdateTitleButton.setText(fontSize);
+//        mListItemEditText.setText(fontSize);
+//        mDateEditText.setText(fontSize);
+//        mAddItemButton.setText(fontSize);
+//        mUpdateItemButton.setText(fontSize);
+//        mDeleteItemButton.setText(fontSize);
+//        mArchiveItemButton.setText(fontSize);
+//        mCompleteItemButton.setText(fontSize);
+//        mListViewComplete.setText(fontSize);
+//        mListViewDate.setText(fontSize);
+//        mListViewItemName.setText(fontSize);
 
     }
 

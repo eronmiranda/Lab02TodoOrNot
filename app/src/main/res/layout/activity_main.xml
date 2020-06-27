@@ -144,6 +144,13 @@
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/activity_main_archive_button"
             style="@style/Widget.AppCompat.Button.Borderless"
