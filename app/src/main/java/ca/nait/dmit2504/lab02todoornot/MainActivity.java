@@ -4,9 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,8 +20,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -29,10 +35,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private EditText mListTitleEditText;
     private Button mAddTitleButton;
+    private Button mUpdateTitleButton;
     private Spinner mListTitleSpinner;
     private EditText mListItemEditText;
     private EditText mDateEditText;
@@ -42,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
     private Button mArchiveItemButton;
     private Button mCompleteItemButton;
     private ListView mListItemListView;
+    private TextView mTodoOrNotTextView;
+    private TextView mItemTitleTextView;
+    private TextView mListViewItemName;
+    private TextView mListViewDate;
+    private TextView mListViewComplete;
 
     private long mEditId = 0;
     private long mSelectedListTitleId;
@@ -51,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private TodoListDB mTodoDatabase;
+    private String mUsername;
+    private String mPassword;
+    private String mUrl;
+
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +80,19 @@ public class MainActivity extends AppCompatActivity {
         mDateEditText = findViewById(R.id.activity_main_date_editTextDate);
         mListItemListView = findViewById(R.id.activity_main_list_item_listview);
 
+        mTodoOrNotTextView = findViewById(R.id.activity_main_todo_or_not_textview);
+        mItemTitleTextView = findViewById(R.id.main_activity_item_title_textview);
+
         mAddItemButton = findViewById(R.id.activity_main_add_item_button);
         mUpdateItemButton = findViewById(R.id.activity_main_update_item_Button);
         mDeleteItemButton = findViewById(R.id.activity_main_delete_item_button);
         mArchiveItemButton =  findViewById(R.id.activity_main_archive_button);
         mCompleteItemButton = findViewById(R.id.activity_main_complete_button);
+        mUpdateTitleButton = findViewById(R.id.activity_main_list_title_update_button);
+
+        mListViewItemName = findViewById(R.id.listview_item_name);
+        mListViewDate = findViewById(R.id.listview_item_date);
+        mListViewComplete = findViewById(R.id.listview_item_complete);
 
         mTodoDatabase = new TodoListDB(this);
 
@@ -78,6 +103,10 @@ public class MainActivity extends AppCompatActivity {
         mCompleteItemButton.setVisibility(View.GONE);
         mDateEditText.setVisibility(View.GONE);
 
+        Context context;
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        PreferenceManager.setDefaultValues(this,R.xml.root_preferences,false);
+        bindSettingsValue();
 
 
         mAddTitleButton.setOnClickListener(new View.OnClickListener() {
@@ -139,21 +168,72 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        bindSettingsValue();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu,menu);
         return true;
+    }
+    public void bindSettingsValue(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String login = prefs.getString("login_name","");
+        String password = prefs.getString("password", "");
+        String url = prefs.getString("base_url", "http://www.youcode.ca/");
+        String backgroundName = prefs.getString("backgroundColor", "Blue");
+
+        if(!backgroundName.isEmpty()){
+            LinearLayout layout = findViewById(R.id.activity_main_linear_layout);
+            layout.setBackgroundColor(Color.parseColor(backgroundName));
+        }
+        mUsername = login;
+        mPassword = password;
+        if(!url.isEmpty() && url != null){
+            mUrl = url;
+        }
+        else{
+            mUrl = BASE_URL;
+        }
+        int fontSize = prefs.getInt("fontsize_pref",0)+12;
+
+        mListTitleEditText.setTextSize(fontSize);
+        mTodoOrNotTextView.setTextSize(fontSize);
+        mItemTitleTextView.setText(fontSize);
+        mAddTitleButton.setText(fontSize);
+        mUpdateTitleButton.setText(fontSize);
+        mListItemEditText.setText(fontSize);
+        mDateEditText.setText(fontSize);
+        mAddItemButton.setText(fontSize);
+        mUpdateItemButton.setText(fontSize);
+        mDeleteItemButton.setText(fontSize);
+        mArchiveItemButton.setText(fontSize);
+        mCompleteItemButton.setText(fontSize);
+        mListViewComplete.setText(fontSize);
+        mListViewDate.setText(fontSize);
+        mListViewItemName.setText(fontSize);
+
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()) {
+            case R.id.menu_item_preferences:
+            {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                this.startActivity(intent);
+                break;
+            }
             case R.id.menu_item_view_archive:
                 Intent intent = new Intent(this, ViewArchiveActivity.class);
-                startActivity(intent);
+                intent.putExtra("url", mUrl);
+                intent.putExtra("username", mUsername);
+                intent.putExtra("password", mPassword);
+                this.startActivity(intent);
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     private void bindDataToListTitleSpinner() {
@@ -311,17 +391,17 @@ public class MainActivity extends AppCompatActivity {
       String listTitle = titleResult.getTitleName();
       String listItem = singleResult.getListItemName();
       String completed_flag = singleResult.getIsComplete().equals("Completed") ? "1" : "0";;
-      String username = "eron";
-      String password = "miranda";
+//      String username = "eron";
+//      String password = "miranda";
       String date = singleResult.getDate();
 
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(mUrl)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .build();
             YoucodeTodoListService service = retrofit.create(YoucodeTodoListService.class);
-            Call<String> postCall = service.archiveListItem(listTitle, listItem, completed_flag, username, password,date);
+            Call<String> postCall = service.archiveListItem(listTitle, listItem, completed_flag, mUsername, mPassword,date);
             postCall.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -345,6 +425,31 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onUpdateListTitle(View view){
+        String titleName = mListTitleEditText.getText().toString();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if(titleName.isEmpty()){
+            stringBuilder.append("List title name value is required\n");
+        }
+        if (stringBuilder.length() > 0) {
+            Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_LONG).show();
+        } else {
+            // save the record to the database
+            long rowsUpdated = mTodoDatabase.updateListTitle(mSelectedListTitleId, titleName);
+            if (rowsUpdated == 1) {
+                Toast.makeText(this, getResources().getString(R.string.update_record, mEditId), Toast.LENGTH_SHORT ).show();
+            } else {
+                Toast.makeText(this, "Update was not successful", Toast.LENGTH_SHORT ).show();
+            }
+            // clear the text in the input views
+            mListTitleEditText.setText("");
+
+            bindDataToListTitleSpinner();
+            cancelEditMode();
         }
     }
 

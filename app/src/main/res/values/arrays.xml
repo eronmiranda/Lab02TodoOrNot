@@ -1,0 +1,26 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+    <string-array name="color_options">
+        <item>Default</item>
+        <item>Darkest Indigo</item>
+        <item>Darker Ruby</item>
+        <item>Darker Coral</item>
+        <item>Darkest ALice</item>
+    </string-array>
+    <string-array name="color_options_values">
+        <item>#faebd7</item>
+        <item>#093145</item>
+        <item>#AD2A1A</item>
+        <item>#DA621E</item>
+        <item>#107896</item>
+    </string-array>
+</resources>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#faebd7"
@@ -32,12 +33,12 @@
             android:id="@+id/activity_main_list_title_edittext"
             android:layout_width="221dp"
             android:layout_height="wrap_content"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/create_list_title_text"
             android:inputType="textPersonName"
             android:textColor="#000000"
-            android:textColorHint="#000000"
-            android:autofillHints="" />
+            android:textColorHint="#000000" />
 
         <Button
             android:id="@+id/activity_main_add_title_btn"
@@ -56,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#3F51B5"
+            android:onClick="onUpdateListTitle"
             android:text="@string/update_task_text"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
@@ -66,7 +68,6 @@
         android:id="@+id/main_activity_item_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="@string/task_todo_text"
         android:textColor="#000000"
         android:textSize="18sp" />
@@ -75,29 +76,29 @@
         android:id="@+id/activity_main_list_title_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#142DBD"/>
+        android:backgroundTint="#142DBD" />
 
     <EditText
         android:id="@+id/activity_main_list_item_name_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/enter_list_item_text"
         android:inputType="textPersonName"
         android:textColor="#0C0C0C"
-        android:textColorHint="#0E0E0E"
-        android:autofillHints="" />
+        android:textColorHint="#0E0E0E" />
 
     <EditText
         android:id="@+id/activity_main_date_editTextDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/select_date"
         android:inputType="date"
         android:textColor="#000000"
-        android:textColorHint="#000000"
-        android:autofillHints="" />
+        android:textColorHint="#000000" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,0 +1,41 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:title="App Settings">
+
+    <PreferenceCategory app:title="User Settings">
+        <EditTextPreference
+            android:key="base_url"
+            android:summary="Use this to change the URL to visit"
+            android:title="URL"
+            android:defaultValue="@string/url_pref_default"/>
+        <EditTextPreference
+            android:key="login_name"
+            android:summary="Use this to change your login name"
+            android:title="Login Name"
+            android:defaultValue="@string/username_pref_default"/>
+        <EditTextPreference
+            android:key="password"
+            android:summary="Use this to edit your password"
+            android:title="User Password"
+            android:defaultValue="@string/password_pref_default"/>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Background Settings">
+        <ListPreference android:key="backgroundColor"
+            android:title="@string/backgroundcolor"
+            android:summary="@string/background_summary"
+            android:entries="@array/color_options"
+            android:entryValues="@array/color_options_values"
+            android:dialogTitle="@string/backgroundcolor"
+            android:defaultValue="#faebd7"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/font_header">
+        <SeekBarPreference
+            android:key="fontsize_pref"
+            android:title="@string/font_size"
+            android:max="32"
+            android:defaultValue="8"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

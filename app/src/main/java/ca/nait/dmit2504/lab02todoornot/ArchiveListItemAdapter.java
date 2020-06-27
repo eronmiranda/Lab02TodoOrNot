@@ -57,12 +57,12 @@ public class ArchiveListItemAdapter extends BaseAdapter {
         date.setText(currentItem.getDate());
         if(currentItem.getIsComplete().equals("0"))
         {
-            isComplete.setText(R.string.completed_text);
-            isComplete.setTextColor(Color.GREEN);
-        }
-        else{
             isComplete.setText(R.string.not_completed_text);
             isComplete.setTextColor(Color.RED);
+        }
+        else{
+            isComplete.setText(R.string.completed_text);
+            isComplete.setTextColor(Color.GREEN);
         }
 
         return listItemView;
