@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         mDeleteItemButton.setVisibility(View.GONE);
         mArchiveItemButton.setVisibility(View.GONE);
         mCompleteItemButton.setVisibility(View.GONE);
+        mDateEditText.setVisibility(View.GONE);
+
+
 
         mAddTitleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     mDeleteItemButton.setVisibility(View.VISIBLE);
                     mArchiveItemButton.setVisibility(View.VISIBLE);
                     mCompleteItemButton.setVisibility(View.VISIBLE);
+                    mDateEditText.setVisibility(View.VISIBLE);
 
                     mListItemEditText.setText(singleResult.getListItemName());
                     mDateEditText.setText(singleResult.getDate());
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 ListTitle selectedTitle = listTitles.get(position);
                 mListTitleEditText.setText(selectedTitle.getTitleName());
                 mSelectedListTitleId = selectedTitle.getId();
+                rebindListItemView();
             }
 
             @Override
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        mListTitleEditText.setText("");
     }
 
     private void bindDataToListTitleSpinner() {
@@ -127,13 +133,13 @@ public class MainActivity extends AppCompatActivity {
         }
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_spinner_item,
+                R.layout.spinner_item,
                 titleNames
         );
         mListTitleSpinner.setAdapter(spinnerAdapter);
     }
     private void rebindListItemView(){
-        Cursor dbCursor = mTodoDatabase.getAllListItem();
+        Cursor dbCursor = mTodoDatabase.getAllListItemByTitle(mSelectedListTitleId);
         // Define an array of columns names used by the cursor
         String[] fromFields = {"listItemName", "date", "isComplete"};
         // Define an array of resource ids in the listview item layout
@@ -160,17 +166,12 @@ public class MainActivity extends AppCompatActivity {
         if(itemName.isEmpty()){
             stringBuilder.append("Item name value is required\n");
         }
-        if (date.isEmpty()) {
-            stringBuilder.append("Date value is required. \n");
-        }
         if (stringBuilder.length() > 0) {
             Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_LONG).show();
         } else {
-            // save the record to the database
+            mTodoDatabase.createListItem(itemName, String.valueOf(mSelectedListTitleId));
+            Toast.makeText(this, getResources().getString(R.string.create_new_record, mEditId), Toast.LENGTH_SHORT ).show();
 
-            long primaryKeyId = mTodoDatabase.createListItem(itemName, date, String.valueOf(mSelectedListTitleId));
-            Toast.makeText(this, getResources().getString(R.string.create_new_record, primaryKeyId), Toast.LENGTH_SHORT ).show();
-            // clear the text in the input views
             mListItemEditText.setText("");
             mDateEditText.setText("");
 
@@ -215,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
         mDeleteItemButton.setVisibility(View.GONE);
         mArchiveItemButton.setVisibility(View.GONE);
         mCompleteItemButton.setVisibility(View.GONE);
+        mDateEditText.setVisibility(View.GONE);
 
         mListItemEditText.setText("");
         mDateEditText.setText("");
@@ -239,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 isComplete = "Completed";
             }
             else{
-                isComplete = "Not Complete";
+                isComplete = "Incomplete";
             }
             long rowsUpdated = mTodoDatabase.completeListItem(mEditId, isComplete);
             if (rowsUpdated == 1) {
@@ -254,6 +256,17 @@ public class MainActivity extends AppCompatActivity {
             rebindListItemView();
             cancelEditMode(view);
         }
+    }
+    public void onDeleteListItem(View view){
+        long rowsDeleted = mTodoDatabase.deleteListItem(mEditId);
+        if(rowsDeleted==1){
+            Toast.makeText(this, getResources().getString(R.string.delete_record), Toast.LENGTH_SHORT ).show();
+        }
+        else{
+            Toast.makeText(this, "Delete was not successful", Toast.LENGTH_SHORT ).show();
+        }
+        rebindListItemView();
+        cancelEditMode(view);
     }
 
 }

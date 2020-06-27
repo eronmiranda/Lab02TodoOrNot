@@ -7,7 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class TodoListDB extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
@@ -116,11 +119,16 @@ public class TodoListDB extends SQLiteOpenHelper {
     }
 
 
-    public long createListItem(String name, String date, String titleId){
+    public long createListItem(String name, String titleId){
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(c);
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TABLE_LIST_ITEM_COLUMN_NAME, name);
-        values.put(TABLE_LIST_ITEM_COLUMN_DATE, date);
+        values.put(TABLE_LIST_ITEM_COLUMN_DATE, formattedDate);
         values.put(TABLE_LIST_ITEM_COLUMN_COMPLETE, "Incomplete");
         values.put(TABLE_LIST_ITEM_COLUMN_TITLE_ID,titleId);
         // insert more from here
@@ -218,6 +226,9 @@ public class TodoListDB extends SQLiteOpenHelper {
 
         return foundListItem;
     }
-
+    public int deleteListItem(long id){
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(TABLE_LIST_ITEM, BaseColumns._ID + " = ?", new String[] {String.valueOf(id)});
+    }
 
 }

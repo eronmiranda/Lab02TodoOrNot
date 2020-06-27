@@ -6,7 +6,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_list_item_text">Enter list item</string>
-    <string name="select_date">Select date</string>
+    <string name="select_date">Enter Date</string>
     <string name="add_task_text">Add Item</string>
     <string name="update_task_text">Update</string>
     <string name="archive_item_text">Archive</string>
@@ -16,8 +16,10 @@
     <string name="complete_text">isComplete</string>
     <string name="create_new_record">Successfully created record with id of %d</string>
     <string name="update_record">Successfully updated record with id of %d</string>
-    <string name="complete_list">Successfully completed this list item with id of %d</string>
+    <string name="complete_list">Successfully changed the status of this list item with id of %d</string>
     <string name="completed_text">Completed</string>
-    <string name="not_completed_text">Not Complete</string>
+    <string name="not_completed_text">Incomplete</string>
     <string name="complete_button_text">Complete</string>
+    <string name="delete_record">Successfully deleted the list item</string>
+    <string name="task_todo_text">Enter tasks ToDo</string>
 </resources>
